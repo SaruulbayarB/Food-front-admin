@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { Header } from "./_components/header";
-import { SideMenu } from "./_components/sideMenu";
-import { Menus } from "./_components/menus";
+import { Header } from "./components/header";
+import { SideMenu } from "./components/sideMenu";
+import { Menus } from "./components/menus";
 
 export default function Home() {
   return (
