@@ -9,7 +9,7 @@ import {
 
 export const MenuContainer = () => {
   return (
-    <div className="w-[270px] h-[245px] border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-3">
+    <div className="w-screen h-[245px] border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-3">
       <div className="w-[240px] h-[130px] border-[#E4E4E7] rounded-2xl border mt-5 relative"></div>
       <button className="btn btn-ghost w-10 h-10 ml-40 mt-20 absolute rounded-3xl bg-white">
         <img
