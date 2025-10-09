@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -15,6 +15,7 @@ import {
 
 export const Header = () => {
   const [categories, setCategories] = useState<string[]>([]);
+  const [newCategories, setNewCategories] = useState<string | undefined>();
 
   const getCategories = async () => {
     try {
@@ -30,6 +31,21 @@ export const Header = () => {
   useEffect(() => {
     getCategories();
   }, []);
+
+  const newCategoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewCategories(e.target.value);
+  };
+
+  const createCategoryHandler = async () => {
+    const result = await fetch("http://localhost:3001/categories", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(newCategories),
+    });
+  };
 
   return (
     <div className="w-screen h-60 bg-white flex ml-5 pl-10 pt-5 mt-15 rounded-2xl">
@@ -52,12 +68,13 @@ export const Header = () => {
             <DialogHeader>
               <DialogTitle>Are you absolutely sure?</DialogTitle>
               <DialogDescription>
-                <Input></Input>
-                <Button className="mt-5 ml-40">Create</Button>
+                <Input onChange={newCategoryNameChangeHandler}></Input>
+                <Button className="mt-5 ml-40" onClick={createCategoryHandler}>
+                  Create
+                </Button>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
-            
         </Dialog>
       </div>
     </div>
