@@ -9,7 +9,7 @@ import {
 
 export const MenuContainer = () => {
   return (
-    <div className="w-screen h-[245px] border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-3">
+    <div className="w-80 h-50 border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-3">
       <div className="w-[240px] h-[130px] border-[#E4E4E7] rounded-2xl border mt-5 relative"></div>
       <button className="btn btn-ghost w-10 h-10 ml-40 mt-20 absolute rounded-3xl bg-white">
         <img
@@ -19,8 +19,8 @@ export const MenuContainer = () => {
         />
       </button>
       <div className="text-[#EF4444] font-medium mt-2">
-        Name
-        <span className="ml-3 font-normal">$</span>
+        Brie Crostini Appetizer
+        <span className="ml-20 font-normal">12$</span>
       </div>
       <div className="font-xs font-normal text-[#09090B] mt-3">
         hool onion, garlic, etc

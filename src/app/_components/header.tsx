@@ -48,10 +48,12 @@ export const Header = () => {
   };
 
   return (
-    <div className="w-screen h-60 bg-white flex ml-5 pl-10 pt-5 mt-15 rounded-2xl">
-      <h1 className="text-xl text-[#09090B] font-semibold">Dishes Category</h1>
+    <div className="w-screen h-60 bg-white flex flex-col ml-5 pl-10 pt-5 mt-15 rounded-2xl">
+      <div className="text-xl text-[#09090B] font-semibold">
+        Dishes Category
+      </div>
 
-      <div className="ml-10 flex gap-2">
+      <div className=" flex gap-2">
         {categories.map((category, index) => (
           <Badge key={index} variant="outline">
             {category}
@@ -61,7 +63,7 @@ export const Header = () => {
         <Dialog>
           <DialogTrigger asChild>
             <button className="ml-4 px-3 py-1 bg-blue-500 text-black rounded-lg hover:bg-blue-600 w-20 h-8">
-              Open
+              open
             </button>
           </DialogTrigger>
           <DialogContent>
