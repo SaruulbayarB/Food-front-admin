@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,14 +15,16 @@ import {
 
 export const Header = () => {
   const [categories, setCategories] = useState<string[]>([]);
-  const [newCategories, setNewCategories] = useState<string | undefined>();
+  const [newCategory, setNewCategory] = useState("");
 
   const getCategories = async () => {
     try {
-      const result = await fetch("http://localhost:3001/categories");
+      const result = await fetch("http://localhost:4000/api/categories");
       const responseData = await result.json();
-      const { data } = responseData;
-      setCategories(data || []); // safe fallback
+      const { category } = responseData; // backend returns { message, category }
+
+      // Extract category names safely
+      setCategories(category.map((c: any) => c.categoryName));
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -33,18 +35,26 @@ export const Header = () => {
   }, []);
 
   const newCategoryNameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewCategories(e.target.value);
+    setNewCategory(e.target.value);
   };
 
   const createCategoryHandler = async () => {
-    const result = await fetch("http://localhost:3001/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    try {
+      const response = await fetch("http://localhost:4000/api/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ categoryName: newCategory }),
+      });
 
-      body: JSON.stringify(newCategories),
-    });
+      if (response.ok) {
+        await getCategories(); // refresh list after adding
+        setNewCategory(""); // clear input
+      }
+    } catch (error) {
+      console.error("Error creating category:", error);
+    }
   };
 
   return (
@@ -53,7 +63,7 @@ export const Header = () => {
         Dishes Category
       </div>
 
-      <div className=" flex gap-2">
+      <div className="flex gap-2 mt-3">
         {categories.map((category, index) => (
           <Badge key={index} variant="outline">
             {category}
@@ -62,15 +72,24 @@ export const Header = () => {
 
         <Dialog>
           <DialogTrigger asChild>
-            <button className="ml-4 px-3 py-1 bg-blue-500 text-black rounded-lg hover:bg-blue-600 w-20 h-8">
-              open
-            </button>
+            <div>
+              <button className="ml-4 px-3 py-1 bg-red-500 text-white rounded-full hover:bg-red-300 w-10 h-10">
+                +
+              </button>
+              <button className="ml-4 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 w-20 h-8">
+                Delete
+              </button>
+            </div>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogTitle>Add New Category</DialogTitle>
               <DialogDescription>
-                <Input onChange={newCategoryNameChangeHandler}></Input>
+                <Input
+                  placeholder="Enter category name"
+                  value={newCategory}
+                  onChange={newCategoryNameChangeHandler}
+                />
                 <Button className="mt-5 ml-40" onClick={createCategoryHandler}>
                   Create
                 </Button>
