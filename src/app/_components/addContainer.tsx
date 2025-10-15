@@ -11,14 +11,28 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 export const AddContainer = () => {
-  const categories = ["Appetizer", "Main Course", "Dessert", "Drinks"];
+  const [foods, setFoods] = useState<string[]>([]);
+
+  const getFoods = async () => {
+    try {
+      const result = await fetch("http://localhost:4000/api/food");
+      const responseData = await result.json();
+      const { food } = responseData;
+
+      // Extract category names safely
+      setFoods(food.map((c: any) => c.foodName));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   return (
     <div className="w-screen h-60 bg-[#ffffff] rounded-xl flex mt-10 ml-10 gap-4">
-      {categories.map((category) => (
-        <Dialog key={category}>
+      {foods.map((food) => (
+        <Dialog key={food}>
           <form>
             <DialogTrigger asChild>
               <div className="w-80 h-50 border border-dashed border-[#EF4444] rounded-2xl flex justify-center items-center flex-col">
