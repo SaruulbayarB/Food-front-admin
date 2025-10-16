@@ -13,83 +13,113 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
+type Food = {
+  _id: string; // MongoDB ID from backend
+  foodName: string; // name of food
+  foodPrice: number; // price of food
+  foodIngredients: string; // price of food
+  foodImage: string; // price of food
+};
+
 export const AddContainer = () => {
-  const [foods, setFoods] = useState<string[]>([]);
+  const [newFoods, setNewFoods] = useState("");
+  const [newFoodName, setNewFoodName] = useState("");
+  const [newFoodPrice, setNewFoodPrice] = useState("");
+  const [newFoodIngredients, setNewFoodIngredients] = useState("");
+  const [newFoodImage, setNewFoodImage] = useState("");
 
-  const getFoods = async () => {
+  const createFoodHandler = async () => {
+    if (!newFoodName.trim() || !newFoodPrice.trim()) {
+      alert("Please enter food name and price.");
+      return;
+    }
+
     try {
-      const result = await fetch("http://localhost:4000/api/food");
-      const responseData = await result.json();
-      const { food } = responseData;
+      const response = await fetch("http://localhost:4000/api/food", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          foodName: newFoodName,
+          foodPrice: newFoodPrice,
+          foodImage: newFoodImage,
+          foodIngredients: newFoodIngredients,
+        }),
+      });
 
-      // Extract category names safely
-      setFoods(food.map((c: any) => c.foodName));
+      if (response.ok) {
+        setNewFoodName("");
+        setNewFoodPrice("");
+        setNewFoodIngredients("");
+        alert("New dish added!");
+      } else {
+        alert("Failed to add food item");
+      }
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error creating food:", error);
     }
   };
 
   return (
     <div className="w-screen h-60 bg-[#ffffff] rounded-xl flex mt-10 ml-10 gap-4">
-      {foods.map((food) => (
-        <Dialog key={food}>
-          <form>
-            <DialogTrigger asChild>
-              <div className="w-80 h-50 border border-dashed border-[#EF4444] rounded-2xl flex justify-center items-center flex-col">
-                <button className="btn btn-secondary w-10 h-10 rounded-4xl">
-                  +
-                </button>
-                <div className="text-md font-normal mt-2">Add new dish to</div>
-                <div>Appetizer</div>
-              </div>
-            </DialogTrigger>
-            <DialogContent className="w-[460px] h-[592px] bg-[#FFFFFF] p-6">
-              <DialogHeader>
-                <DialogTitle>Add new dishes to Appetizer</DialogTitle>
-              </DialogHeader>
-              <div className="flex gap-5 mt-10">
-                <div className="gap-3">
-                  <Label htmlFor="name-1">Food Name</Label>
-                  <Input
-                    className="mt-5 text-[#71717A]"
-                    id="name-1"
-                    name="name"
-                    defaultValue="Type food name"
-                  />
-                </div>
-                <div className="gap-3">
-                  <Label htmlFor="username-1">Food Price</Label>
-                  <Input
-                    className="mt-5 gap-3 text-[#71717A]"
-                    id="username-1"
-                    name="username"
-                    defaultValue="Enter price..."
-                  />
-                </div>
-              </div>
-              <div className="mt-3">
-                <Label htmlFor="username-1">Ingredients</Label>
+      <Dialog>
+        <form>
+          <DialogTrigger asChild>
+            <div className="w-70 h-50 border border-dashed border-[#EF4444] rounded-2xl flex justify-center items-center flex-col">
+              <button className="btn btn-secondary w-10 h-10 rounded-4xl">
+                +
+              </button>
+              <div className="text-md font-normal mt-2">Add new dish to</div>
+              <div>Appetizer</div>
+            </div>
+          </DialogTrigger>
+          <DialogContent className="w-[460px] h-[592px] bg-[#FFFFFF] p-6">
+            <DialogHeader>
+              <DialogTitle>Add new dishes to Appetizer</DialogTitle>
+            </DialogHeader>
+            <div className="flex gap-5 mt-10">
+              <div className="gap-3">
+                <Label htmlFor="name-1">Food Name</Label>
                 <Input
-                  className="mt-5 text-[#71717A] border border-[#9d9595] rounded-md w-[410px] h-[90px]"
-                  id="username-1"
-                  name="username"
-                  defaultValue="List ingredients..."
+                  className="mt-5 text-[#71717A]"
+                  id="name-1"
+                  name="name"
+                  value={newFoodName}
+                  onChange={(e) => setNewFoodName(e.target.value)}
                 />
               </div>
-              <div className="mt-3">
-                <Label htmlFor="username-1">Food Image</Label>
-                <input
-                  type="image"
-                  className="w-[412px] h-[138px] border border-dashed rounded-2xl border-[#2563EB33] mt-3"
-                ></input>
+              <div className="gap-3">
+                <Label htmlFor="username-1">Food Price</Label>
+                <Input
+                  className="mt-5 gap-3 text-[#71717A]"
+                  id="username-1"
+                  name="username"
+                  value={newFoodPrice}
+                  onChange={(e) => setNewFoodPrice(e.target.value)}
+                />
               </div>
-              <DialogFooter>
-                <Button type="submit">Add Dish</Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
-      ))}
+            </div>
+            <div className="mt-3">
+              <Label htmlFor="username-1">Ingredients</Label>
+              <Input
+                className="mt-5 text-[#71717A] border border-[#9d9595] rounded-md w-[410px] h-[90px]"
+                id="username-1"
+                name="username"
+                value={newFoodIngredients}
+                onChange={(e) => setNewFoodIngredients(e.target.value)}
+              />
+            </div>
+            <div className="mt-3">
+              <Label htmlFor="picture">Picture</Label>
+              <Input id="picture" type="file" />
+            </div>
+            <DialogFooter>
+              <Button onClick={createFoodHandler} type="submit">
+                Add Dish
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </form>
+      </Dialog>
     </div>
   );
 };

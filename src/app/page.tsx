@@ -5,10 +5,8 @@ import { Menus } from "./_components/menus";
 
 export default function Home() {
   return (
-  <AdminLayout>
-    
-        <Menus></Menus>
- 
-  </AdminLayout>
+    <AdminLayout>
+      <Menus></Menus>
+    </AdminLayout>
   );
 }
