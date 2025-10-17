@@ -13,43 +13,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
-type Food = {
-  _id: string; // MongoDB ID from backend
-  foodName: string; // name of food
-  foodPrice: number; // price of food
-  foodIngredients: string; // price of food
-  foodImage: string; // price of food
-};
+// type Food = {
+//   _id: string; // MongoDB ID from backend
+//   foodName: string; // name of food
+//   foodPrice: number; // price of food
+//   foodIngredients: string; // price of food
+//   foodImage: string; // price of food
+// };
 
 export const AddContainer = () => {
   const [newFoods, setNewFoods] = useState("");
-  const [newFoodName, setNewFoodName] = useState("");
-  const [newFoodPrice, setNewFoodPrice] = useState("");
-  const [newFoodIngredients, setNewFoodIngredients] = useState("");
-  const [newFoodImage, setNewFoodImage] = useState("");
+  const [FoodName, setFoodName] = useState("");
+  const [FoodPrice, setFoodPrice] = useState("");
+  const [FoodIngredients, setFoodIngredients] = useState("");
+  const [FoodImage, setFoodImage] = useState("");
 
   const createFoodHandler = async () => {
-    if (!newFoodName.trim() || !newFoodPrice.trim()) {
+    if (!FoodName.trim() || !FoodPrice.trim()) {
       alert("Please enter food name and price.");
       return;
     }
 
+    const form = new FormData();
+
+    form.append("foodName", FoodName);
+    form.append("foodPrice", FoodPrice);
+    form.append("foodIngredients", FoodIngredients);
+    form.append("foodImage", FoodImage);
+
     try {
       const response = await fetch("http://localhost:4000/api/food", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          foodName: newFoodName,
-          foodPrice: newFoodPrice,
-          foodImage: newFoodImage,
-          foodIngredients: newFoodIngredients,
-        }),
+        body: form,
       });
 
       if (response.ok) {
-        setNewFoodName("");
-        setNewFoodPrice("");
-        setNewFoodIngredients("");
+        setFoodName("");
+        setFoodPrice("");
+        setFoodIngredients("");
+        setFoodImage("");
         alert("New dish added!");
       } else {
         alert("Failed to add food item");
@@ -65,7 +67,10 @@ export const AddContainer = () => {
         <form>
           <DialogTrigger asChild>
             <div className="w-70 h-50 border border-dashed border-[#EF4444] rounded-2xl flex justify-center items-center flex-col">
-              <button className="btn btn-secondary w-10 h-10 rounded-4xl">
+              <button
+                type="button"
+                className="btn btn-secondary w-10 h-10 rounded-4xl"
+              >
                 +
               </button>
               <div className="text-md font-normal mt-2">Add new dish to</div>
@@ -83,8 +88,8 @@ export const AddContainer = () => {
                   className="mt-5 text-[#71717A]"
                   id="name-1"
                   name="name"
-                  value={newFoodName}
-                  onChange={(e) => setNewFoodName(e.target.value)}
+                  value={FoodName}
+                  onChange={(e) => setFoodName(e.target.value)}
                 />
               </div>
               <div className="gap-3">
@@ -93,8 +98,8 @@ export const AddContainer = () => {
                   className="mt-5 gap-3 text-[#71717A]"
                   id="username-1"
                   name="username"
-                  value={newFoodPrice}
-                  onChange={(e) => setNewFoodPrice(e.target.value)}
+                  value={FoodPrice}
+                  onChange={(e) => setFoodPrice(e.target.value)}
                 />
               </div>
             </div>
@@ -104,8 +109,8 @@ export const AddContainer = () => {
                 className="mt-5 text-[#71717A] border border-[#9d9595] rounded-md w-[410px] h-[90px]"
                 id="username-1"
                 name="username"
-                value={newFoodIngredients}
-                onChange={(e) => setNewFoodIngredients(e.target.value)}
+                value={FoodIngredients}
+                onChange={(e) => setFoodIngredients(e.target.value)}
               />
             </div>
             <div className="mt-3">
