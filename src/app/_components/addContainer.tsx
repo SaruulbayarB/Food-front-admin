@@ -74,7 +74,7 @@ export const AddContainer = () => {
                 +
               </button>
               <div className="text-md font-normal mt-2">Add new dish to</div>
-              <div>Appetizer</div>
+              <div>categories</div>
             </div>
           </DialogTrigger>
           <DialogContent className="w-[460px] h-[592px] bg-[#FFFFFF] p-6">
