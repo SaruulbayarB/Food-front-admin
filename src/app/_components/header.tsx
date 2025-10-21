@@ -12,6 +12,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@radix-ui/react-alert-dialog";
+import {
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from "@/components/ui/alert-dialog";
 
 type Category = {
   _id: string; // MongoDB ID from backend
@@ -22,6 +35,14 @@ export const Header = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const userEmail = localStorage.getItem("userEmail");
+  const router = useRouter();
+
+  const onLogout = () => {
+    localStorage.removeItem("userEmail");
+    router.push("login");
+  };
 
   // Fetch categories from backend
   const getCategories = async () => {
@@ -141,6 +162,23 @@ export const Header = () => {
         >
           Delete
         </button>
+      </div>
+      <div className="bg-blue-500 w-60 ml-400 h-16 flex rounded-md items-center justify-between p-8">
+        <p>{userEmail}</p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline">Logout</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={onLogout}>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
