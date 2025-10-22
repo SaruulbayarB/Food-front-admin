@@ -56,9 +56,6 @@ export default function Register() {
   const emailChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setNewEmail(e.target.value);
   };
-  // useEffect(() => {
-  //   createLoginData();
-  // }, []);
 
   return (
     <div className="flex ml-20 mt-20 justify-between w-screen h-600 pl-60 pr-100">
@@ -76,6 +73,7 @@ export default function Register() {
                 onChange={emailChangeHandler}
                 placeholder="enter your email address"
               ></Input>
+              {error && <p className="text-red-500">{error}</p>}
             </div>
             <div className="flex items-center justify-center mt-[-8]">
               <div className="font text-1xl">Already have an account?</div>
@@ -86,8 +84,17 @@ export default function Register() {
                 Login
               </Button>
             </div>
-            <Button className="mt-3 ml-1" onClick={() => setStep(2)}>
-              Lets's go
+            <Button
+              className="mt-3 ml-1"
+              onClick={() => {
+                if (!newEmail.trim()) {
+                  alert("Please enter your email before continuing.");
+                  return;
+                }
+                setStep(2);
+              }}
+            >
+              Let's go
             </Button>
           </div>
           <img src="Delivery.png" alt="Edit" className="w-160 h-160" />

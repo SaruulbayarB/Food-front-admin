@@ -10,10 +10,16 @@ type Login = {
   password: string;
 };
 
+type category = {
+  email: string; // MongoDB ID from backend
+  password: string; // name of category
+};
+
 export default function Login() {
-  const [getLogins, setGetLogins] = useState<Login[]>([]);
+  const [loginData, setLoginData] = useState<Login[]>([]);
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [userData, setUserData] = useState("");
 
   const router = useRouter();
   useEffect(() => {
@@ -30,8 +36,9 @@ export default function Login() {
       alert("please enter email and password");
       return;
     }
+
     try {
-      const response = await fetch("http://localhost:4000/api/signup", {
+      const response = await fetch("http://localhost:4000/api/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: newEmail, password: newPassword }),
@@ -58,9 +65,7 @@ export default function Login() {
     setNewEmail(e.target.value);
     setNewPassword(e.target.value);
   };
-  useEffect(() => {
-    createLogin();
-  }, []);
+
   return (
     <div className="flex ml-20 mt-20 justify-between w-screen h-600 pl-60 pr-100">
       <div className="mt-50 flex flex-col gap-4">
