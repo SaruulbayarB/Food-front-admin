@@ -3,7 +3,33 @@ import { useEffect, useState } from "react";
 import { MenuContainer } from "./menuContainer";
 import { AddContainer } from "./addContainer";
 
+type Food = {
+  _id: string;
+  foodName: string;
+  foodPrice: number;
+  foodIngredients?: string;
+  foodImage: string;
+  foodCategoryId: string;
+};
+
 export const Menus = () => {
+  const [foods, setFoods] = useState<Food[]>([]);
+
+  const getFoods = async () => {
+    try {
+      const result = await fetch("http://localhost:4000/api/food");
+      const responseData = await result.json();
+      const { food } = responseData; // backend returns { message, food }
+      setFoods(food);
+    } catch (error) {
+      console.error("Error fetching foods:", error);
+    }
+  };
+
+  useEffect(() => {
+    getFoods();
+  }, []);
+
   type Category = {
     _id: string; // MongoDB ID from backend
     categoryName: string; // name of category
@@ -21,7 +47,7 @@ export const Menus = () => {
       console.error("Error fetching categories:", error);
     }
   };
-
+  console.log({ categories });
   useEffect(() => {
     getCategories();
   }, []);
@@ -38,8 +64,14 @@ export const Menus = () => {
           </h2>
 
           <div className="flex gap-4 flex-col">
-            <AddContainer />
-            <MenuContainer />
+            <AddContainer
+              categoryId={category._id}
+              categoryName={category.categoryName}
+              onComplete={() => {
+                getFoods();
+              }}
+            />
+            <MenuContainer foods={foods} categoryId={category._id} />
           </div>
         </div>
       ))}

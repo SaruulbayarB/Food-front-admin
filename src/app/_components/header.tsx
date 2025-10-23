@@ -36,7 +36,7 @@ export const Header = () => {
   const [newCategory, setNewCategory] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const userEmail = localStorage.getItem("userEmail");
+  // const userEmail = localStorage.getItem("userEmail");
   const router = useRouter();
 
   const onLogout = () => {
@@ -164,7 +164,7 @@ export const Header = () => {
         </button>
       </div>
       <div className="bg-blue-500 w-60 ml-400 h-16 flex rounded-md items-center justify-between p-8">
-        <p>{userEmail}</p>
+        <p>{`userEmail`}</p>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="outline">Logout</Button>

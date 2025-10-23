@@ -9,40 +9,42 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
-
 type Food = {
   _id: string;
   foodName: string;
   foodPrice: number;
   foodIngredients?: string;
+  foodImage: string;
+  foodCategoryId: string;
 };
 
-export const MenuContainer = () => {
-  const [foods, setFoods] = useState<Food[]>([]);
+export const MenuContainer = ({
+  foods,
+  categoryId,
+}: {
+  foods: Food[];
+  categoryId: string;
+}) => {
+  console.log({ foods });
 
-  const getFoods = async () => {
-    try {
-      const result = await fetch("http://localhost:4000/api/food");
-      const responseData = await result.json();
-      const { food } = responseData; // backend returns { message, food }
-      setFoods(food);
-    } catch (error) {
-      console.error("Error fetching foods:", error);
-    }
-  };
-
-  useEffect(() => {
-    getFoods();
-  }, []);
+  const filteredFoods = foods.filter(
+    (food) => food.foodCategoryId === categoryId
+  );
 
   return (
     <div className="w-screen flex flex-wrap">
-      {foods.map((food) => (
+      {filteredFoods.map((food) => (
         <div
           key={food._id}
-          className="w-[280px] h-50 border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-3"
+          className="w-[280px] h-50 border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-4"
         >
-          <div className="w-[220px] h-[130px] border-[#E4E4E7] rounded-2xl border mt-5 p-3 justify-between"></div>
+          <div className="w-[250px] h-[110px] rounded-2xl border mt-5 justify-between">
+            <img
+              src={food.foodImage}
+              alt={food.foodName}
+              className="w-full h-full object-cover rounded-2xl"
+            />
+          </div>
 
           <div className="flex justify-between">
             <div className="font-semibold text-[#ef4444]">{food.foodName}</div>
@@ -50,7 +52,7 @@ export const MenuContainer = () => {
             <div className="font-normal text-black mr-3">{food.foodPrice}$</div>
           </div>
 
-          <div className="text-sm font-normal text-[#09090B] mt-3">
+          <div className="text-sm font-normal text-[#09090B] mt-3 bg-red-400">
             {food.foodIngredients}
           </div>
         </div>
