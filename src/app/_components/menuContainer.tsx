@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
+import { EditContainer } from "./EditContainer";
 type Food = {
   _id: string;
   foodName: string;
@@ -36,9 +37,18 @@ export const MenuContainer = ({
       {filteredFoods.map((food) => (
         <div
           key={food._id}
-          className="w-[280px] h-50 border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-4"
+          className="w-[280px] h-50 border rounded-2xl border-[#E4E4E7] flex flex-col ml-10 pl-4 relative"
         >
-          <div className="w-[250px] h-[110px] rounded-2xl border mt-5 justify-between">
+          <div className="absolute">
+            <EditContainer
+              categoryId={""}
+              categoryName={""}
+              onComplete={function (): void {
+                throw new Error("Function not implemented.");
+              }}
+            ></EditContainer>
+          </div>
+          <div className="w-[250px] h-[130px] rounded-2xl border mt-3 justify-between">
             <img
               src={food.foodImage}
               alt={food.foodName}
@@ -52,7 +62,7 @@ export const MenuContainer = ({
             <div className="font-normal text-black mr-3">{food.foodPrice}$</div>
           </div>
 
-          <div className="text-sm font-normal text-[#09090B] mt-3 bg-red-400">
+          <div className="text-sm font-normal text-[#09090B] mt-3">
             {food.foodIngredients}
           </div>
         </div>
